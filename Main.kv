@@ -1,0 +1,175 @@
+#:import dp kivy.metrics.dp
+#:import sp kivy.metrics.sp
+
+<ImageButton@ButtonBehavior+Image>:
+
+ScreenManager:
+    ChatListScreen:
+    ChatScreen:
+
+
+<ChatListScreen>:
+    name: "home"
+
+    FloatLayout:
+
+        # 🌄 Background Image
+        Image:
+            source: "JARVIS.png"
+            fit_mode: "fill"
+            size_hint: 1, 1
+
+        # 🧩 Top bar with menu button and New Chat
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(56)
+            padding: dp(10)
+            spacing: dp(10)
+
+            FloatLayout:
+
+                ImageButton:
+                    source: "MenuButton.png"
+                    size_hint: None, None
+                    size: dp(40), dp(40)
+                    pos: dp(0), dp(590)
+                    on_release:
+                        app.toggle_menu()
+                        app.touched()
+
+                Button:
+                    color: 0, 0, 0, 1
+                    text: "New Chat"
+                    size_hint_x: None
+                    width: dp(300)
+                    pos: dp(30), dp(250)
+                    
+                    font_size: sp(18)
+
+                    background_normal: ""
+                    background_down: ""
+                    background_color: 0, 0, 0, 0
+
+                    canvas.before:
+                        Color:
+                            rgba: 0.1, 0.6, 0.9, 0.8
+                        RoundedRectangle:
+                            size: self.size
+                            pos: self.pos
+                            radius: [20]
+                    on_release: app.open_chat()
+
+        # ☰ Sliding Menu
+        BoxLayout:
+            id: side_menu
+            orientation: "vertical"
+            size_hint_x: None
+            width: dp(140)
+            x: -self.width
+            padding: dp(12)
+            spacing: dp(10)
+
+            canvas.before:
+                Color:
+                    rgba: 0.7, 0.7, 0.7, 0.9
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            Label:
+                text: "Menu"
+                font_size: sp(20)
+                size_hint_y: None
+                height: dp(40)
+
+            Button:
+                text: "New Chat"
+                size_hint_y: None
+                height: dp(40)
+                on_release:
+                    app.open_chat()
+                    app.toggle_menu()
+
+            Button:
+                text: "Settings"
+                size_hint_y: None
+                height: dp(40)
+
+            Button:
+                text: "Logout"
+                size_hint_y: None
+                height: dp(40)
+
+            Button:
+                text: "Exit"
+                size_hint_y: None
+                height: dp(40)
+
+            Widget:
+
+            Label:
+                text: "JARVIS"
+                font_size: sp(18)
+                size_hint_y: None
+                height: dp(40)
+
+<ChatScreen>:
+    name: "chat"
+    FloatLayout:
+
+        Image:
+            source: "NEWCHAT.png"
+            fit_mode: "fill"
+            size_hint: 1, 1
+
+        Button:
+            text: "Back"
+            size_hint: None, None
+            size: dp(100), dp(40)
+            pos_hint: {"x": 0.02, "top": 0.98}
+            on_release: app.go_home()
+        
+        FloatLayout:
+            size_hint: 0.8, None
+            height: dp(40)
+            pos_hint: {"x": 0.1, "top": 0.6}
+
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1   # background color of textbox
+                RoundedRectangle:
+                    size: self.size
+                    pos: dp(20), dp(425)
+                    radius: [20]
+
+            TextInput:
+                id: Prompt
+                size_hint: 1, 1
+                pos: dp(20), dp(422)
+                multiline: False
+                font_size: sp(18)
+                font_name: "Roboto-Regular.ttf"
+                foreground_color: 0, 0, 0, 1  # black text
+                background_normal: ""
+                background_down: ""
+                background_color: 0, 0, 0, 0
+                on_text_validate: 
+                    app.command(Prompt.text)
+                    self.text = ""
+            
+            ImageButton:
+                source: "Enter.png"
+                size_hint: None, None
+                size: dp(60), dp(60)
+                pos: dp(300), dp(415)
+                background_normal: ""
+                background_down: ""
+                background_color: 0.1, 0.6, 0.9, 1
+
+            
+                on_release: 
+                    app.command(Prompt.text)
+                    Prompt.text = ""
+                
+            
